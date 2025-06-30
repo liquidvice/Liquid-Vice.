@@ -37,7 +37,6 @@
       margin: 20px auto;
       box-shadow: 0 0 10px #aaa;
     }
-
     .carrito.sticky {
       position: sticky;
       top: 0;
@@ -47,7 +46,6 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       border-bottom: 2px solid #ccc;
     }
-
     .total {
       font-weight: bold;
     }
@@ -67,19 +65,17 @@
       display: flex;
       flex-direction: column;
     }
-
-    /* 🔧 Mostrar productos también en pantallas chicas */
-    #productos {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
     @media (min-width: 768px) {
       #contenedor-principal {
         flex-direction: row;
         align-items: flex-start;
         gap: 20px;
+      }
+      #productos {
+        flex: 2;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
       }
       #carrito {
         flex: 1;
@@ -89,6 +85,7 @@
       }
     }
 
+    /* Contador cantidad carrito */
     #cantidad-carrito {
       font-weight: bold;
       color: gray;
@@ -235,6 +232,7 @@
       vaciarCarrito();
     }
 
+    // ✅ Ejecutar cuando todo ya está definido
     mostrarProductos();
   </script>
 </body>
