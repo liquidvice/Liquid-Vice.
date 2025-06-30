@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Liquid Vice - Carrito</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      margin: 0;
+    }
+    h1 {
+      text-align: center;
+      padding-top: 100px;
+    }
+    .producto, .carrito {
+      border: 1px solid #ccc;
+      background: white;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+    }
+    .producto button {
+      margin-top: 10px;
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .producto button:hover {
+      background-color: #34495e;
+    }
+    .carrito {
+      box-shadow: 0 0 10px #aaa;
+    }
+    .carrito.sticky {
+      background: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      border-bottom: 2px solid #ccc;
+      z-index: 1000;
+    }
+    .total {
+      font-weight: bold;
+    }
+    .boton {
+      margin: 5px 0;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .boton:hover {
+      background-color: #219150;
+    }
+
+    #contenedor-principal {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+    }
+
+    #productos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding-top: 200px; /* espacio para carrito fijo en móvil */
+    }
+
+    @media (min-width: 768px) {
+      #contenedor-principal {
+        flex-direction: row;
+        gap: 20px;
+      }
+      #productos {
+        flex: 2;
+        padding-top: 0;
+      }
+      #carrito {
+        flex: 1;
+        position: sticky;
+        top: 20px;
+        max-width: 300px;
+      }
+    }
+
+    /* Carrito fijo en móviles */
+    @media (max-width: 767px) {
+      #carrito {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        border-radius: 0;
+      }
+    }
+
+    /* Contador cantidad */
+    #cantidad-carrito {
+      font-weight: bold;
+      color: gray;
+      transition: color 0.3s ease;
+    }
+    #cantidad-carrito.activo {
+      color: green;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.3); }
+      50% { transform: scale(1); }
+    }
+    #cantidad-carrito.animado {
+      animation: pop 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <h1>Liquid Vice</h1>
+
+  <div id="contenedor-principal">
+    <div id="carrito" class="carrito sticky">
+      <h2>Carrito (<span id="cantidad-carrito">0</span>)</h2>
+      <div id="items"></div>
+      <p class="total">Total: $<span id="total">0</span></p>
+      <button class="boton" onclick="vaciarCarrito()">Vaciar carrito</button>
+      <button class="boton" onclick="finalizarCompra()">Finalizar compra</button>
+    </div>
+
+    <div id="productos"></div>
+  </div>
+
+  <script>
+    const productos = [
+      { nombre: "Speed xl 500ml", precio: 150 },
+      { nombre: "Speed xl 500ml x6", precio: 850 },
+      { nombre: "Sprite 1.75L", precio: 300 },
+      { nombre: "Coca cola 2.25L", precio: 350 },
+      { nombre: "Coca cola 2.25L 2 unidades", precio: 700 },
+      { nombre: "Sprite 1.75L 2 unidades", precio: 600 },
+      { nombre: "Coca cola 1.5L", precio: 280 },
+      { nombre: "Coca cola 1.5L 2 unidades", precio: 560 },
+      { nombre: "Paso De Los Toros 1.5L", precio: 250 },
+      { nombre: "Paso De Los Toros 1.5L 2 unidades", precio: 500 },
+      { nombre: "Botella Fernet Branca 750ml", precio: 1400 },
+      { nombre: "Botella Gancia 1L", precio: 1000 },
+      { nombre: "Fernet Branca 750ml & Botella Gancia 1L", precio: 2300 },
+      { nombre: "Fernet Branca 750ml 2 Unidades", precio: 2800 },
+      { nombre: "SKYY 750ml", precio: 1600 },
+      { nombre: "Smirnoff Raspberry 750ml", precio: 1500 },
+      { nombre: "Smirnoff Green Apple 750ml", precio: 1500 },
+      { nombre: "Smirnoff Watermelon 750ml", precio: 1500 },
+      { nombre: "Smirnoff Tropical Fruits 750ml", precio: 1500 },
+      { nombre: "Gin Heredero 700ml", precio: 1300 },
+      { nombre: "Gin Bombay 750ml", precio: 1900 },
+      { nombre: "Baggio Multifruta 1L", precio: 250 },
+      { nombre: "Baggio Naranja 1L", precio: 250 },
+      { nombre: "Baggio Durazno 1L", precio: 250 }
+    ];
+
+    const carrito = [];
+
+    function mostrarProductos() {
+      const contenedor = document.getElementById("productos");
+      productos.forEach((p, i) => {
+        const div = document.createElement("div");
+        div.className = "producto";
+        div.style.width = "180px";
+        div.innerHTML = `
+          <strong>${p.nombre}</strong><br>
+          Precio: $${p.precio}<br>
+          <button class="btn-pedir" data-index="${i}">Pedir</button>
+        `;
+        contenedor.appendChild(div);
+      });
+
+      document.querySelectorAll(".btn-pedir").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const index = parseInt(btn.getAttribute("data-index"));
+          agregar(index);
+        });
+      });
+    }
+
+    function agregar(i) {
+      const producto = productos[i];
+      const existente = carrito.find(item => item.nombre === producto.nombre);
+      if (existente) {
+        existente.cantidad += 1;
+      } else {
+        carrito.push({ ...producto, cantidad: 1 });
+      }
+      actualizarCarrito();
+    }
+
+    function actualizarCarrito() {
+      const items = document.getElementById("items");
+      items.innerHTML = "";
+      let total = 0;
+      let cantidadTotal = 0;
+
+      carrito.forEach((p, i) => {
+        total += p.precio * p.cantidad;
+        cantidadTotal += p.cantidad;
+        const div = document.createElement("div");
+        div.innerHTML = `
+          ${p.nombre} x${p.cantidad} - $${p.precio * p.cantidad}
+          <button onclick="eliminar(${i})">❌</button>
+        `;
+        items.appendChild(div);
+      });
+
+      document.getElementById("total").textContent = total;
+
+      const cantidadSpan = document.getElementById("cantidad-carrito");
+      cantidadSpan.textContent = cantidadTotal;
+
+      if (cantidadTotal > 0) {
+        cantidadSpan.classList.add("activo");
+      } else {
+        cantidadSpan.classList.remove("activo");
+      }
+
+      cantidadSpan.classList.remove("animado");
+      void cantidadSpan.offsetWidth;
+      cantidadSpan.classList.add("animado");
+    }
+
+    function eliminar(i) {
+      carrito.splice(i, 1);
+      actualizarCarrito();
+    }
+
+    function vaciarCarrito() {
+      carrito.length = 0;
+      actualizarCarrito();
+    }
+
+    function finalizarCompra() {
+      alert("¡Gracias por su compra!");
+      vaciarCarrito();
+    }
+
+    mostrarProductos();
+  </script>
+</body>
+</html>
