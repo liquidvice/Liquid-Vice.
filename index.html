@@ -38,7 +38,6 @@
       box-shadow: 0 0 10px #aaa;
     }
 
-    /* Sticky carrito */
     .carrito.sticky {
       position: sticky;
       top: 0;
@@ -88,7 +87,6 @@
       }
     }
 
-    /* Contador cantidad carrito */
     #cantidad-carrito {
       font-weight: bold;
       color: gray;
@@ -98,7 +96,6 @@
       color: green;
     }
 
-    /* Animación pop para cantidad */
     @keyframes pop {
       0% { transform: scale(1); }
       25% { transform: scale(1.3); }
@@ -123,8 +120,36 @@
       <button class="boton" onclick="finalizarCompra()">Finalizar compra</button>
     </div>
   </div>
-    <script>
-  const carrito = [];
+
+  <script>
+    const carrito = [];
+
+    const productos = [
+      { nombre: "Speed xl 500ml", precio: 1950 },
+      { nombre: "Speed xl 500ml x6", precio: 9750 },
+      { nombre: "Sprite 1.75L", precio: 2000 },
+      { nombre: "Coca cola 2.25L", precio: 3200 },
+      { nombre: "Coca cola 2.25L 2 unidades", precio: 6000 },
+      { nombre: "Sprite 1.75L 2 unidades", precio: 3800 },
+      { nombre: "Coca cola 1.5L", precio: 2200 },
+      { nombre: "Coca cola 1.5L 2 unidades", precio: 4000 },
+      { nombre: "Paso De Los Toros 1.5L", precio: 2100 },
+      { nombre: "Paso De Los Toros 1.5L 2 unidades", precio: 4000 },
+      { nombre: "Botella Fernet Branca 750ml", precio: 10200 },
+      { nombre: "Botella Gancia 1L", precio: 6000 },
+      { nombre: "Fernet Branca 750ml & Botella Gancia 1L", precio: 15700 },
+      { nombre: "Fernet Branca 750ml 2 Unidades", precio: 18900 },
+      { nombre: "SKYY 750ml", precio: 5900 },
+      { nombre: "Smirnoff Raspberry 750ml", precio: 7000 },
+      { nombre: "Smirnoff Green Apple 750ml", precio: 7000 },
+      { nombre: "Smirnoff Watermelon 750ml", precio: 7000 },
+      { nombre: "Smirnoff Tropical Fruits 750ml", precio: 7000 },
+      { nombre: "Gin Heredero 700ml", precio: 10500 },
+      { nombre: "Gin Bombay 750ml", precio: 23000 },
+      { nombre: "Baggio Multifruta 1L", precio: 1350 },
+      { nombre: "Baggio Naranja 1L", precio: 1350 },
+      { nombre: "Baggio Durazno 1L", precio: 1350 }
+    ];
 
     function mostrarProductos() {
       const contenedor = document.getElementById("productos");
@@ -182,16 +207,14 @@
       const cantidadSpan = document.getElementById("cantidad-carrito");
       cantidadSpan.textContent = cantidadTotal;
 
-      // Cambiar color según cantidad
       if (cantidadTotal > 0) {
         cantidadSpan.classList.add("activo");
       } else {
         cantidadSpan.classList.remove("activo");
       }
 
-      // Reiniciar animación pop
       cantidadSpan.classList.remove("animado");
-      void cantidadSpan.offsetWidth; // trigger reflow para reiniciar animación
+      void cantidadSpan.offsetWidth;
       cantidadSpan.classList.add("animado");
     }
 
@@ -211,34 +234,6 @@
     }
 
     mostrarProductos();
-
-
-    const productos = [
-      { nombre: "Speed xl 500ml", precio: 1950 },
-      { nombre: "Speed xl 500ml x6", precio: 9750 },
-      { nombre: "Sprite 1.75L", precio: 2000 },
-      { nombre: "Coca cola 2.25L", precio: 3200 },
-      { nombre: "Coca cola 2.25L 2 unidades", precio: 6000 },
-      { nombre: "Sprite 1.75L 2 unidades", precio: 3800 },
-      { nombre: "Coca cola 1.5L", precio: 2200 },
-      { nombre: "Coca cola 1.5L 2 unidades", precio: 4000 },
-      { nombre: "Paso De Los Toros 1.5L", precio: 2100 },
-      { nombre: "Paso De Los Toros 1.5L 2 unidades", precio: 4000 },
-      { nombre: "Botella Fernet Branca 750ml", precio: 10200 },
-      { nombre: "Botella Gancia 1L", precio: 6000 },
-      { nombre: "Fernet Branca 750ml & Botella Gancia 1L", precio: 15700 },
-      { nombre: "Fernet Branca 750ml 2 Unidades", precio: 18900 },
-      { nombre: "SKYY 750ml", precio: 5900 },
-      { nombre: "Smirnoff Raspberry 750ml", precio: 7000 },
-      { nombre: "Smirnoff Green Apple 750ml", precio: 7000 },
-      { nombre: "Smirnoff Watermelon 750ml", precio: 7000 },
-      { nombre: "Smirnoff Tropical Fruits 750ml", precio: 7000 },
-      { nombre: "Gin Heredero 700ml", precio: 10500 },
-      { nombre: "Gin Bombay 750ml", precio: 23000 },
-      { nombre: "Baggio Multifruta 1L", precio: 1350 },
-      { nombre: "Baggio Naranja 1L", precio: 1350 },
-      { nombre: "Baggio Durazno 1L", precio: 1350 }
-    ];
   </script>
 </body>
 </html>
