@@ -118,8 +118,6 @@
   </div>
 
   <script>
-    const carrito = [];
-
     const productos = [
       { nombre: "Speed xl 500ml", precio: 1950 },
       { nombre: "Speed xl 500ml x6", precio: 9750 },
@@ -146,7 +144,7 @@
       { nombre: "Baggio Naranja 1L", precio: 1350 },
       { nombre: "Baggio Durazno 1L", precio: 1350 }
     ];
-
+       const carrito = [];
     function mostrarProductos() {
       const contenedor = document.getElementById("productos");
       productos.forEach((p, i) => {
